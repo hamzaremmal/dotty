@@ -1,5 +1,7 @@
 name: Scala CLA
 on:
+  # This is a temporary trigger to cover already opened PRs
+  workflow_dispatch:
   pull_request:
     branches-ignore:
       - 'language-reference-stable'
