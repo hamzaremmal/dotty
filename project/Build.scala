@@ -20,6 +20,8 @@ import sbt.Package.ManifestAttributes
 import sbt.PublishBinPlugin.autoImport._
 import dotty.tools.sbtplugin.RepublishPlugin
 import dotty.tools.sbtplugin.RepublishPlugin.autoImport._
+import dotty.tools.sbtplugin.ScalaLibraryPlugin
+
 import sbt.plugins.SbtPlugin
 import sbt.ScriptedPlugin.autoImport._
 import xerial.sbt.Sonatype.autoImport._
@@ -31,6 +33,8 @@ import sbtbuildinfo.BuildInfoPlugin
 import sbtbuildinfo.BuildInfoPlugin.autoImport._
 import sbttastymima.TastyMiMaPlugin
 import sbttastymima.TastyMiMaPlugin.autoImport._
+
+import scala.jdk.CollectionConverters._
 
 import scala.util.Properties.isJavaAtLeast
 
@@ -1207,9 +1211,9 @@ object Build {
    *  This version of the library is not (yet) TASTy/binary compatible with the Scala 2 compiled library.
    */
   lazy val `scala2-library-bootstrapped` = project.in(file("scala2-library-bootstrapped")).
+    enablePlugins(ScalaLibraryPlugin).
     withCommonSettings(Bootstrapped).
     dependsOn(dottyCompiler(Bootstrapped) % "provided; compile->runtime; test->test").
-    settings(commonBootstrappedSettings).
     settings(scala2LibraryBootstrappedSettings).
     settings(moduleName := "scala2-library")
     // -Ycheck:all is set in project/scripts/scala2-library-tasty-mima.sh
@@ -1221,7 +1225,6 @@ object Build {
   lazy val `scala2-library-cc` = project.in(file("scala2-library-cc")).
     withCommonSettings(Bootstrapped).
     dependsOn(dottyCompiler(Bootstrapped) % "provided; compile->runtime; test->test").
-    settings(commonBootstrappedSettings).
     settings(scala2LibraryBootstrappedSettings).
     settings(
       moduleName := "scala2-library-cc",
